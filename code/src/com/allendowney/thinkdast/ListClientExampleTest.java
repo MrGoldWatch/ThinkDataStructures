@@ -1,7 +1,7 @@
 package com.allendowney.thinkdast;
 
-import static org.junit.Assert.assertThat;
 import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,5 +24,4 @@ public class ListClientExampleTest {
 		List list = lce.getList();
 		assertThat(list, instanceOf(ArrayList.class) );
 	}
-
 }

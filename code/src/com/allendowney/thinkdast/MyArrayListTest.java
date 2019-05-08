@@ -1,4 +1,4 @@
-package com.allendowney.thinkdast;
+// package com.allendowney.thinkdast;
 
 //import static org.junit.Assert.*;
 import static org.junit.Assert.assertThat;
@@ -30,10 +30,12 @@ public class MyArrayListTest {
 		list = new ArrayList<Integer>();
 		list.add(1);
 		list.add(2);
-		list.add(3);
+        list.add(3);
+        // System.out.println(Arrays.toString(list.toArray()));
 
 		mylist = new MyArrayList<Integer>();
-		mylist.addAll(list);
+        mylist.addAll(list);
+        // System.out.println(Arrays.toString(mylist.toArray()));
 	}
 
 	/**
@@ -52,7 +54,7 @@ public class MyArrayListTest {
 		for (int i = 4; i < 20; i++) {
 			mylist.add(i);
 		}
-		//System.out.println(Arrays.toString(mal.toArray()));
+		// System.out.println(Arrays.toString(mal.toArray()));
 		assertThat(mylist.get(18), is(new Integer(19)));
 	}
 

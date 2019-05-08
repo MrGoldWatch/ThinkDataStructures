@@ -1,4 +1,4 @@
-package com.allendowney.thinkdast;
+// package com.allendowney.thinkdast;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -6,7 +6,9 @@ import java.util.List;
 
 import org.jfree.data.xy.XYSeries;
 
-import com.allendowney.thinkdast.Profiler.Timeable;
+import sun.misc.Timer;
+
+// import com.allendowney.thinkdast.Profiler.Timeable;
 
 public class ProfileListAdd {
 	
@@ -14,8 +16,9 @@ public class ProfileListAdd {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		profileArrayListAddEnd();
-		//profileArrayListAddBeginning();
+        // profileArrayListAddEnd();
+        System.out.println("this is a test.");
+		profileArrayListAddBeginning();
 		//profileLinkedListAddBeginning();
 		//profileLinkedListAddEnd();
 	}
@@ -46,7 +49,23 @@ public class ProfileListAdd {
 	 * Characterize the run time of adding to the beginning of an ArrayList
 	 */
 	public static void profileArrayListAddBeginning() {
-		// TODO: FILL THIS IN!
+        // TODO: FILL THIS IN!
+        Timeable timeable = new Timeable() {
+            List<String> list;
+
+            public void setup(int n) {
+                list = new ArrayList<String>();
+            }
+
+            public void timeMe(int n) {
+                for (int i = 0; i < n; i++) {
+                    list.add(0, "a string");
+                }
+            }
+        };
+        int startN = 64000;
+        int endMillis = 10000;
+        runProfiler("ArrayList add begining", timeable, startN, endMillis);
 	}
 
 	/**

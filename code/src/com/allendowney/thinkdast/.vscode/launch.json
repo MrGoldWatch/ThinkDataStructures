@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - ProfileListAdd",
+            "request": "launch",
+            "mainClass": "ProfileListAdd",
+            "projectName": "thinkdast_9053646a"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - MyLinkedList",
+            "request": "launch",
+            "mainClass": "MyLinkedList",
+            "projectName": "thinkdast_9053646a"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - ListClientExample",
+            "request": "launch",
+            "mainClass": "com.allendowney.thinkdast.ListClientExample"
+        }
+    ]
+}

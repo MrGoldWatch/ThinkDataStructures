@@ -10,7 +10,7 @@
     <property name="target" value="1.7"/>
     <property name="source" value="1.7"/>
     <path id="ThinkDaSt.classpath">
-        <pathelement location="src"/>
+        <pathelement location="bin"/>
         <pathelement location="lib/jedis-2.8.0.jar"/>
         <pathelement location="lib/jsoup-1.8.3.jar"/>
         <pathelement location="lib/junit-4.12.jar"/>
