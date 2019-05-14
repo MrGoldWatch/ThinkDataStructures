@@ -1,7 +1,8 @@
 /**
  * 
  */
-package com.allendowney.thinkdast;
+// package com.allendowney.thinkdast;
+package packages;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;

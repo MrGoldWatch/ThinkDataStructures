@@ -8,7 +8,8 @@ import org.jfree.data.xy.XYSeries;
 
 import sun.misc.Timer;
 
-// import com.allendowney.thinkdast.Profiler.Timeable;
+import packages.Profiler.Timeable;
+import packages.*;
 
 public class ProfileListAdd {
 	
@@ -17,10 +18,9 @@ public class ProfileListAdd {
 	 */
 	public static void main(String[] args) {
         // profileArrayListAddEnd();
-        System.out.println("this is a test.");
-		profileArrayListAddBeginning();
-		//profileLinkedListAddBeginning();
-		//profileLinkedListAddEnd();
+		// profileArrayListAddBeginning();
+		// profileLinkedListAddBeginning();
+		profileLinkedListAddEnd();
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class ProfileListAdd {
                 }
             }
         };
-        int startN = 64000;
+        int startN = 4000;
         int endMillis = 10000;
         runProfiler("ArrayList add begining", timeable, startN, endMillis);
 	}
@@ -72,14 +72,47 @@ public class ProfileListAdd {
 	 * Characterize the run time of adding to the beginning of a LinkedList
 	 */
 	public static void profileLinkedListAddBeginning() {
-		// TODO: FILL THIS IN!
+        // TODO: FILL THIS IN!
+        Timeable timeable = new Timeable() {
+            List<String> list;
+
+            public void setup(int n) {
+                list = new LinkedList<String>();
+            }
+
+            public void timeMe(int n) {
+                for (int i = 0; i < n; i++) {
+                    list.add(0, "a String");
+                }
+            }
+        };
+        int startN = 128000;
+        int endMillis = 2000;
+        runProfiler("LinkedList add begining", timeable, startN, endMillis);
+
 	}
 
 	/**
 	 * Characterize the run time of adding to the end of a LinkedList
 	 */
 	public static void profileLinkedListAddEnd() {
-		// TODO: FILL THIS IN!
+        // TODO: FILL THIS IN!
+        Timeable timeable = new Timeable() {
+            List<String> list;
+
+            public void setup(int n) {
+                list = new LinkedList<String>();
+            }
+            public void timeMe(int n) {
+                for (int i=0; i<n; i++) {
+                    list.add("a String");
+                }
+            }
+        };
+
+        int startN = 64000;
+        int endMillis = 1000;
+        runProfiler("LinkedList add end", timeable, startN, endMillis);
 	}
 
 	/**

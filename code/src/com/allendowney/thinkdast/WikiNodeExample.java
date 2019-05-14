@@ -1,4 +1,4 @@
-package com.allendowney.thinkdast;
+// package com.allendowney.thinkdast;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
@@ -14,6 +14,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
+import org.jsoup.nodes.Attributes;
+
+import packages.*;
 
 public class WikiNodeExample {
 	
@@ -28,20 +31,36 @@ public class WikiNodeExample {
 		Element content = doc.getElementById("mw-content-text");
 				
 		// TODO: avoid selecting paragraphs from sidebars and boxouts
-		Elements paras = content.select("p");
-		Element firstPara = paras.get(0);
-		
-		recursiveDFS(firstPara);
+        Elements paras = content.select("p");
+        // System.out.println(paras);
+        Element firstPara = paras.get(1);
+        // System.out.println(firstPara);
+        
+        // To get the first element which has tag <a>
+        Elements links = paras.select("a");
+        Element firstLink = links.get(0);
+        
+        // To get the value of the href attribute
+        Attributes attrb = firstLink.attributes();
+        String hrefAttrb = attrb.get("href");
+        System.out.println(firstLink);
+        System.out.println(attrb);
+        System.out.println(hrefAttrb);
+		// recursiveDFS(firstPara);
 		System.out.println();
 
-		iterativeDFS(firstPara);
+		// iterativeDFS(firstPara);
 		System.out.println();
 
-		Iterable<Node> iter = new WikiNodeIterable(firstPara);
+        Iterable<Node> iter = new WikiNodeIterable(firstLink);
+        // System.out.print(iter);
 		for (Node node: iter) {
-			if (node instanceof TextNode) {
-				System.out.print(node);
-			}
+			// if ((node instanceof TextNode)) {
+			// 	System.out.print(node);
+            // }  
+            if (node instanceof Element) {
+                System.out.println(node);
+            }
 		}
 	}
 

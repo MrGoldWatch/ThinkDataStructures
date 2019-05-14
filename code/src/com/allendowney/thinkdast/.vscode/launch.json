@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - WikiFetcher",
+            "request": "launch",
+            "mainClass": "WikiFetcher",
+            "projectName": "thinkdast_9053646a"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - ProfileListAdd",
             "request": "launch",
             "mainClass": "ProfileListAdd",

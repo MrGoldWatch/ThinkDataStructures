@@ -1,4 +1,4 @@
-package com.allendowney.thinkdast;
+// package com.allendowney.thinkdast;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,10 +50,12 @@ public class WikiFetcher {
 
 		// assemble the file name
 		String slash = File.separator;
-		String filename = "resources" + slash + realURL.getHost() + realURL.getPath();
+        String filename = "resources" + slash + realURL.getHost() + realURL.getPath();
+        System.out.println(filename);
 
 		// read the file
-		InputStream stream = WikiFetcher.class.getClassLoader().getResourceAsStream(filename);
+        InputStream stream = WikiFetcher.class.getClassLoader().getResourceAsStream(filename);
+        System.out.println(stream);
 		Document doc = Jsoup.parse(stream, "UTF-8", filename);
 
 		// parse the contents of the file
