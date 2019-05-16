@@ -2,7 +2,7 @@
  * 
  */
 // package com.allendowney.thinkdast;
-package packages;
+// package packages;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;

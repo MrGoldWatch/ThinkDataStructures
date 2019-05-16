@@ -16,12 +16,16 @@ import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 import org.jsoup.nodes.Attributes;
 
-import packages.*;
+// import packages.*;
 
 public class WikiNodeExample {
-	
+    // used check for paranthesis
+    private Deque<String> parenthesisStack;
+    
 	public static void main(String[] args) throws IOException {
-        String url = "https://en.wikipedia.org/wiki/Java";
+        
+
+        String url = "https://en.wikipedia.org/wiki/Island"; //"https://en.wikipedia.org/wiki/Java";
         System.out.println();
 		
 		// download and parse the document
@@ -35,8 +39,11 @@ public class WikiNodeExample {
         Elements paras = content.select("p");
         // System.out.println(paras);
 
+        // need to do a for loop for this
+        // to be able to get the first paragraph that has the correct link
+        // incase first paragraph does not contain a valid link
         Element firstPara = paras.get(0);
-        // System.out.println(firstPara);
+        System.out.println(firstPara);
         
         // To get the first element which has tag <a>
         Elements links = paras.select("a");
@@ -47,9 +54,7 @@ public class WikiNodeExample {
         // To get the value of the href attribute
         Attributes attrb = firstLink.attributes();
         String hrefAttrb = attrb.get("href");
-        // System.out.println(firstLink); // prints the first accurance of <a> tag
-        // System.out.println(attrb); // prints the attributes of the first <a> tag
-        // System.out.println(hrefAttrb); // prints the value for attribute key "href"
+ 
         
         
         // do i need to any DFS??
@@ -59,23 +64,31 @@ public class WikiNodeExample {
 		// iterativeDFS(firstPara);
 		System.out.println();
 
+        // This is where to implement FindFirstLinkPara
+        /**
+        * Returns the first valid link in a paragraph, or null.
+        * 
+        * @param root
+        */
         // why do i need this? 
         // to use class Node's attr(key) method
+        // where the checks for valid link happens
+
         Iterable<Node> iter = new WikiNodeIterable(firstPara);
-        System.out.print(iter);
+        // System.out.print(iter);
 		for (Node node: iter) {
 
-            // System.out.println();
-
-            // String nodeAttrb = node.attr("href");
-            // System.out.println(nodeAttrb);
-            // System.out.println();
+            // check for paranthesis if textnode
 			if ((node instanceof TextNode)) {
-				// System.out.print(node);
-            }  
-            if (node instanceof Element) {
-                // System.out.println(node);
+                System.out.println("+++++++++++TextNode");
+				System.out.println(node);
             }
+
+            // check for tags <i> or <em> if element
+            // if (node instanceof Element) {
+            //     System.out.println("Element");
+            //     System.out.println(node);
+            // }
 		}
 	}
 
