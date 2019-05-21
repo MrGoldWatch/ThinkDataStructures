@@ -50,7 +50,7 @@ public class WikiPhilosophy {
         String source = "https://en.wikipedia.org/wiki/Java";
 
         System.out.println();
-        testConjecture(destination, source, 20);
+        testConjecture(destination, source, 40);
     }
 
     /**
