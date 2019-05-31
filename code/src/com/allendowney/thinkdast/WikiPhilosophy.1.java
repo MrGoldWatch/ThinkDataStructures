@@ -19,6 +19,9 @@ public class WikiPhilosophy {
     final static List<String> visited = new ArrayList<String>();
     final static WikiFetcher wf = new WikiFetcher();
 
+    private Deque<String> parenthesisStack; // used check for paranthesis
+	private Elements paragraphs; // the list of paragraphs we should search
+
     /**
      * Tests a conjecture about Wikipedia and Philosophy.
      *
@@ -39,6 +42,8 @@ public class WikiPhilosophy {
         testConjecture(destination, source, 10);
     }
 
+    
+
     /**
      * Starts from given URL and follows first link until it finds the destination or exceeds the limit.
      *
@@ -48,5 +53,46 @@ public class WikiPhilosophy {
      */
     public static void testConjecture(String destination, String source, int limit) throws IOException {
         // TODO: FILL THIS IN!
+        int i;
+        String url = source;
+
+        for (i=0; i<limit; i++) {
+            if (visited.contains(url)){
+                System.err.println("Error: loop");
+                return;
+            } else {
+                visited.add(url);
+            }
+
+            Element link = getFirstValidLink(url);
+            if (link == null) {
+                System.err.println("ERROR: no outgoing link");
+                return;
+            }
+
+            System.out.println("*** "+ link.text()+" ***");
+            url = link.attr("abs:href");
+
+            if (url.equals(destination)){
+                System.out.println("SUCCESS: reached destination: " + destination + " from: " + source + " in " + i + " iterations.");
+                break;
+            }
+        }
+        if (i==limit) {
+            System.err.println("ERROR: limit "+limit+" has been reached.");
+            return;
+        }
     }
+
+    /**
+     * Calls constructor for parahraphs array (ArrayLink) & visited array
+     *
+     * @param url
+     * @return paragraphs
+     * 
+     */
+    public Element getFirstValidLink(String url) {
+
+    }
+
 }

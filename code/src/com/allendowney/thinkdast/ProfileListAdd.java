@@ -1,4 +1,4 @@
-// package com.allendowney.thinkdast;
+package com.allendowney.thinkdast;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -8,8 +8,8 @@ import org.jfree.data.xy.XYSeries;
 
 import sun.misc.Timer;
 
-import packages.Profiler.Timeable;
-import packages.*;
+import Profiler.Timeable;
+// import packages.*;
 
 public class ProfileListAdd {
 	
