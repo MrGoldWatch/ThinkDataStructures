@@ -1,4 +1,4 @@
-package com.allendowney.thinkdast;
+// package com.allendowney.thinkdast;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -82,8 +82,13 @@ public class Index {
         // TODO: Your code here
 
         // make a TermCounter and count the terms in the paragraphs
+        TermCounter counter = new TermCounter(url);
+        counter.processElements(paragraphs);
 
         // for each term in the TermCounter, add the TermCounter to the index
+        for (String key: counter.keySet()) {
+            add(key, counter);
+        }
     }
 
     /**

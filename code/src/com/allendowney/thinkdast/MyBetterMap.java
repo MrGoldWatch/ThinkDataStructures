@@ -1,4 +1,4 @@
-package com.allendowney.thinkdast;
+// package com.allendowney.thinkdast;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -63,14 +63,22 @@ public class MyBetterMap<K, V> implements Map<K, V> {
 	@Override
 	public boolean containsKey(Object target) {
 		// to find a key, we only have to search one map
-		// TODO: FILL THIS IN!
-		return false;
+        // TODO: FILL THIS IN!
+        MyLinearMap<K, V> map = chooseMap(target);
+        return map.containsKey(target);
+
+		// return false;
 	}
 
 	@Override
 	public boolean containsValue(Object target) {
 		// to find a value, we have to search all map
-		// TODO: FILL THIS IN!
+        // TODO: FILL THIS IN!
+        for (MyLinearMap<K, V> map: maps) { 
+            if (map.containsValue(target)) {
+                return true;
+            }
+        }
 		return false;
 	}
 

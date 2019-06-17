@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.allendowney.thinkdast;
+// package com.allendowney.thinkdast;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -63,7 +63,12 @@ public class MyLinearMap<K, V> implements Map<K, V> {
 	 * @param target
 	 */
 	private Entry findEntry(Object target) {
-		// TODO: FILL THIS IN!
+        // TODO: FILL THIS IN!
+        for (Entry entry: entries) {
+			if (equals(target, entry.getKey())) {
+				return (entry);
+			}
+		}
 		return null;
 	}
 
@@ -98,7 +103,11 @@ public class MyLinearMap<K, V> implements Map<K, V> {
 
 	@Override
 	public V get(Object key) {
-		// TODO: FILL THIS IN!
+        // TODO: FILL THIS IN!
+        Entry entry = findEntry(key);
+        if (entry != null) {
+            return entry.getValue();
+        }
 		return null;
 	}
 
@@ -118,8 +127,18 @@ public class MyLinearMap<K, V> implements Map<K, V> {
 
 	@Override
 	public V put(K key, V value) {
-		// TODO: FILL THIS IN!
-		return null;
+        // TODO: FILL THIS IN!
+        Entry entry = findEntry(key);
+        if (entry != null) {
+            V oldValue = entry.getValue();
+            entry.setValue(value);
+            return oldValue;
+        } else {
+            entries.add(new Entry(key, value));
+            System.out.println();
+            return null;
+        }
+        
 	}
 
 	@Override
@@ -131,8 +150,15 @@ public class MyLinearMap<K, V> implements Map<K, V> {
 
 	@Override
 	public V remove(Object key) {
-		// TODO: FILL THIS IN!
-		return null;
+        // TODO: FILL THIS IN!
+        Entry entry = findEntry(key);
+        if (entry != null) {
+            V value = entry.getValue();
+            entries.remove(entry);
+            return value;
+        } else {
+            return null;
+        }
 	}
 
 	@Override
@@ -154,13 +180,24 @@ public class MyLinearMap<K, V> implements Map<K, V> {
 	 */
 	public static void main(String[] args) {
 		Map<String, Integer> map = new MyLinearMap<String, Integer>();
-		map.put("Word1", 1);
-		map.put("Word2", 2);
+		// map.put("Word1", 1);
+        // map.put("Word2", 2);
+        map.put("One", 1);
+		map.put("Two", 2);
+		map.put("Three", 3);
+		map.put(null, 0);
+        // System.out.println(findEntry("Word2"));
+        System.out.println(map.size());
 		Integer value = map.get("Word1");
-		System.out.println(value);
+        System.out.println(value);
+        
+        map.remove("One");
+        System.out.println(map.get("One"));
+        
+        System.out.println(map.size());
 
 		for (String key: map.keySet()) {
-			System.out.println(key + ", " + map.get(key));
+			// System.out.println(key + ", " + map.get(key));
 		}
 	}
 

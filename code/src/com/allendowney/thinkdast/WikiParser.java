@@ -1,4 +1,4 @@
-package com.allendowney.thinkdast;
+// package com.allendowney.thinkdast;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;

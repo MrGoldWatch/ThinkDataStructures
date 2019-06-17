@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.allendowney.thinkdast;
+// package com.allendowney.thinkdast;
 
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.CoreMatchers.*;
@@ -127,6 +127,7 @@ public class MyLinearMapTest {
 	 */
 	@Test
 	public void testRemove() {
+        // assertThat(map.size(), is(4));
 		map.remove("One");
 		assertThat(map.size(), is(3));
 		assertThat(map.get("One"), nullValue());

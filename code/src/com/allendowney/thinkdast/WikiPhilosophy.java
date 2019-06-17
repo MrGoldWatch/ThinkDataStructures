@@ -5,7 +5,8 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Deque;
-import java.util.Iterator;
+import java.util.Scanner;
+
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -39,13 +40,16 @@ public class WikiPhilosophy {
         String destination = "https://en.wikipedia.org/wiki/Philosophy";
         String source = "https://en.wikipedia.org/wiki/Java";
 
-        testConjecture(destination, source, 30);
+        testConjecture(destination, source, 10);
     }
 
     public WikiPhilosophy(Elements paragraphs) {
         this.paragraphs = paragraphs;
         this.parenthesisStack = new ArrayDeque<String>();
     }
+
+
+    
 
     /**
      * Starts from given URL and follows first link until it finds the destination or exceeds the limit.
@@ -56,51 +60,73 @@ public class WikiPhilosophy {
      */
     public static void testConjecture(String destination, String source, int limit) throws IOException {
         // TODO: FILL THIS IN!
-        int i;
+        int i=1;
         String url = source;
+        Scanner kbd = new Scanner (System.in);
+        boolean retry = true;
 
-        for (i=1; i<=limit; i++) {
-            if (visited.contains(url)){
-                System.err.println("Error: loop");
-                return;
-            } else {
-                visited.add(url);
+        while(retry) {
+            for (; i<=limit; i++) {
+                if (visited.contains(url)){
+                    System.err.println("Error: loop");
+                    return;
+                } else {
+                    visited.add(url);
+                }
+
+                Element link = getFirstValidLink(url);
+                if (link == null) {
+                    System.err.println("ERROR: no outgoing link");
+                    return;
+                }
+
+                System.out.println("*** Iteration #"+ i +" *** "+link.text()+" ***");
+                url = link.attr("abs:href");
+
+                if (url.equals(destination)){
+                    System.out.println("SUCCESS: reached destination: " + destination + " from: " + source + " in " + i + " iterations.");
+                    retry = false;
+                    break;
+                }
             }
 
-            Element link = getFirstValidLink(url);
-            if (link == null) {
-                System.err.println("ERROR: no outgoing link");
-                return;
-            }
+            if (i>limit) {
+                System.err.println("ERROR: limit "+limit+" has been reached. Would you like to increase the limit to continue the program? (y/n)");
+                String decision = kbd.nextLine();
 
-            System.out.println("*** Iteration #"+ i +" *** "+link.text()+" ***");
-            url = link.attr("abs:href");
+                switch(decision)
+                {
+                    case "y":
+                        retry = true;
+                        System.out.println("You Answered Yes. Limit Will be Increased by 10");
+                        limit += 10;
+                        break;
 
-            if (url.equals(destination)){
-                System.out.println("SUCCESS: reached destination: " + destination + " from: " + source + " in " + i + " iterations.");
-                break;
+                    case "n":
+                        retry = false;
+                        // break;
+                        // retry = 0;
+                        return;
+
+                    default:
+                        System.out.println("please enter again ");
+                        break;
+                }
+                // return;
             }
-        }
-        if (i>limit) {
-            System.err.println("ERROR: limit "+limit+" has been reached.");
-            return;
         }
     }
 
     /**
-     * Calls WikiFetcher which returns paragraph elements then
-     * Calls constructor for parahraphs array (ArrayLink) & parenthesisStack
-     * For each paragraph in paragraphs it iterizes the elements
-     * Calls elementProcess(check for valid link) or textProcess (check for paranthesis)
+     * Calls constructor for parahraphs array (ArrayLink) & visited array
      *
      * @param url
      * @return paragraphs
      * 
      */
-    public static Element getFirstValidLink(String url) throws IOException {
+    public static Element getFirstValidLink(String url) throws IOException{
         System.out.println();
-        // System.out.println("Fetching "+url);
-        print("Fetching %s...",url);
+        print("Fetching %s...", url);
         Elements paragraphs = wf.fetchWikipedia(url);
 
         WikiPhilosophy wp = new WikiPhilosophy(paragraphs);
@@ -108,25 +134,16 @@ public class WikiPhilosophy {
         return elt;
     }
 
-    // This is where to implement FindFirstLinkPara
-    /**
-    * Returns the first valid link in a paragraph, or null.
-    * Parse throu paragraphs - create Iterable for the first paragraph - get first link and validate
-    * @param root
-    */
     public Element findFirstLink() {
         for (Element paragraph : paragraphs) {
-            Iterable<Node> nodes = new WikiNodeIterable(paragraph);
-
-            for (Node node : nodes) {
+            Iterable<Node> iter = new WikiNodeIterable(paragraph);
+            for (Node node : iter) {
                 if (node instanceof TextNode) {
                     processTextNode((TextNode) node);
                 }
                 if (node instanceof Element) {
                     Element firstLink = processElement((Element) node);
                     if (firstLink != null) {
-                        // System.err.println("ERROR: No Outgoing urls");
-                        // return null;
                         return firstLink;
                     }
                 }
@@ -134,6 +151,7 @@ public class WikiPhilosophy {
         }
         return null;
     }
+
 
     public void processTextNode(TextNode node) {
         StringTokenizer st = new StringTokenizer(node.text(), " ()", true);
@@ -154,26 +172,20 @@ public class WikiPhilosophy {
     }
 
     public Element processElement(Element elt) {
-        if (validLink(elt)){
+        if (validLink(elt)) {
             return elt;
-        }
+        } 
         return null;
     }
 
     public boolean validLink(Element elt) {
-        // starts with # or /wiki/help
-        // is italics
-        // is in paranthesis
-        // check if its a link tag
-
-        // if (elt.attr('href').)
         if (!elt.tagName().equals("a")) {
             return false;
         }
-        if (isInParanthesis(elt)) {
+        if (isInParenthesis(elt)) {
             return false;
         }
-        if (isIalics(elt)) {
+        if (isItalic(elt)) {
             return false;
         }
         if (startsWith(elt, "#") || startsWith(elt, "/wiki/Help/")) {
@@ -186,17 +198,17 @@ public class WikiPhilosophy {
         return (elt.attr("href").startsWith(str));
     }
 
-    public boolean isInParanthesis(Element elt) {
-        return (!parenthesisStack.isEmpty());
-    }
-
-    public boolean isIalics(Element start) {
-        for (Element elt=start; elt!=null; elt=elt.parent()) {
-            if (elt.tagName().equals("em") || elt.tagName().equals("i")) {
+    public boolean isItalic(Element elt) {
+        for (Element e=elt; e!=null; e=e.parent()) {
+            if (e.tagName().equals("em") || e.tagName().equals("i")) {
                 return true;
             }
         }
         return false;
+    }
+
+    public boolean isInParenthesis(Element elt) {
+        return (!parenthesisStack.isEmpty());
     }
 
     public static void print(String msg, Object... args) {

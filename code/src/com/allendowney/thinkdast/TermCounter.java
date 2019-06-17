@@ -1,4 +1,4 @@
-package com.allendowney.thinkdast;
+// package com.allendowney.thinkdast;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -37,7 +37,13 @@ public class TermCounter {
 	 */
 	public int size() {
 		// TODO: FILL THIS IN!
-		return 0;
+        // return 0;
+        // return map.size();
+        int result = 0;
+        for (String key: keySet()) {
+            result += get(key);
+        }
+        return result;
 	}
 
 	/**
