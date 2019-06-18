@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.allendowney.thinkdast;
+// package com.allendowney.thinkdast;
 
 import java.util.Collection;
 import java.util.Deque;
@@ -68,11 +68,71 @@ public class MyTreeMap<K, V> implements Map<K, V> {
 		}
 
 		// something to make the compiler happy
-		@SuppressWarnings("unchecked")
-		Comparable<? super K> k = (Comparable<? super K>) target;
+        @SuppressWarnings("unchecked")
+        
+        // Comparable enables usage of compareTo mathod
+		Comparable<? super K> k = (Comparable<? super K>) target; 
 
-		// TODO: FILL THIS IN!
-		return null;
+        // ****************** first try
+        // TODO: FILL THIS IN!
+        // if (equals(k, root.key)) {
+        //     return ((Node) target);
+        // }
+        // if (k<root.key) {
+        //     root = root.left;
+        //     return findNode(target);
+        // } else if (k>root.key) {
+        //     root = root.right;
+        //     return findNode(target);
+        // } else {
+        //     return null;
+        // }
+
+
+        // ****************** second try
+        // int test = k.compareTo(root.key);
+        // switch (test) {
+        //     case -1:    
+        //         root = root.left;
+        //         return findNode(target);
+        //     case 0:     
+        //         return ((Node) target);
+        //     case 1:
+        //         root = root.right;
+        //         return findNode(target);
+        // }
+
+        // ****************** third try - with help
+        // ****************** works, but for some reason junit takes a long time
+        // Node node = root;
+        // while (node != null) {
+        //     int test = k.compareTo(node.key);
+        //     switch (test) {
+        //         case -1:    
+        //             root = root.left;
+        //             break;
+        //         case 0:     
+        //             return node;
+        //         case 1:
+        //             root = root.right;
+        //             break;
+        //     }
+        // }
+        // return null;
+
+        // ****************** from solution
+        // forgot to create a Node object to set to root for comparable and return.
+        Node node = root;
+    	while (node != null) {
+            int cmp = k.compareTo(node.key);
+            if (cmp < 0)
+                node = node.left;
+            else if (cmp > 0)
+                node = node.right;
+            else
+                return node;
+    	}
+        return null;
 	}
 
 	/**
@@ -95,8 +155,12 @@ public class MyTreeMap<K, V> implements Map<K, V> {
 	}
 
 	private boolean containsValueHelper(Node node, Object target) {
-		// TODO: FILL THIS IN!
-		return false;
+        // TODO: FILL THIS IN! 
+        // forgot to check for null
+        if (node == null) {
+            return false;
+        }
+        return (equals(node.value, target) || containsValueHelper(node.left, target) || containsValueHelper(node.right, target));
 	}
 
 	@Override
@@ -121,9 +185,22 @@ public class MyTreeMap<K, V> implements Map<K, V> {
 	@Override
 	public Set<K> keySet() {
 		Set<K> set = new LinkedHashSet<K>();
-		// TODO: FILL THIS IN!
+        addInOrder(root, set);
 		return set;
 	}
+
+    /* Walks the tree and adds the keys to `set`.
+	 *
+     * node: root of the tree
+     * set: set to add the nodes to
+     */
+	private void addInOrder(Node node, Set<K> set) {
+        if (node == null) return;
+        addInOrder(node.left, set);
+        set.add(node.key);
+        addInOrder(node.right, set);
+    }
+
 
 	@Override
 	public V put(K key, V value) {
@@ -139,9 +216,53 @@ public class MyTreeMap<K, V> implements Map<K, V> {
 	}
 
 	private V putHelper(Node node, K key, V value) {
-		// TODO: FILL THIS IN!
-		return null;
-	}
+
+        // ****************** first try 
+        // @SuppressWarnings("unchecked")
+		// Comparable<? super K> k = (Comparable<? super K>) key; 
+        // while (node != null) {
+        //     int cmp = k.compareTo(node.key);
+        //     if (cmp < 0)
+        //         node = node.left;
+        //     else if (cmp > 0)
+        //         node = node.right;
+        //     else {
+        //         V v = node.value;
+        //         node.value = value;
+        //         return v;
+        //     }
+        // }
+        // node = new Node(key, value);
+        // size++;
+        // return null;
+        
+        // ****************** second try - with help
+        @SuppressWarnings("unchecked")
+		Comparable<? super K> k = (Comparable<? super K>) key; 
+        int cmp = k.compareTo(node.key);
+        if (cmp < 0) {
+            if (node.left == null) {
+                node.left = new Node(key, value);
+                size++;
+                return null;
+            }
+            node = node.left;
+            return putHelper(node, key, value);
+        }
+            
+        else if (cmp > 0) {
+            if (node.right == null) {
+                node.right = new Node(key, value);
+                size++;
+                return null;
+            }
+            node = node.right;
+            return putHelper(node, key, value);
+        }
+        V v = node.value;
+        node.value = value;
+        return v;
+    }
 
 	@Override
 	public void putAll(Map<? extends K, ? extends V> map) {
@@ -182,11 +303,15 @@ public class MyTreeMap<K, V> implements Map<K, V> {
 	public static void main(String[] args) {
 		Map<String, Integer> map = new MyTreeMap<String, Integer>();
 		map.put("Word1", 1);
-		map.put("Word2", 2);
+        map.put("Word2", 2);
+        System.out.println(map.containsKey("Word1"));
 		Integer value = map.get("Word1");
-		System.out.println(value);
+        System.out.println(value);
+        System.out.println(map.containsValue(3));
+        System.out.println(map.containsValue(2));
 
 		for (String key: map.keySet()) {
+            System.out.println("inside");
 			System.out.println(key + ", " + map.get(key));
 		}
 	}

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.allendowney.thinkdast;
+// package com.allendowney.thinkdast;
 
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.CoreMatchers.*;
