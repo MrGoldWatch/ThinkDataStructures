@@ -274,8 +274,91 @@ public class MyTreeMap<K, V> implements Map<K, V> {
 	@Override
 	public V remove(Object key) {
 		// OPTIONAL TODO: FILL THIS IN!
-		throw new UnsupportedOperationException();
-	}
+        // throw new UnsupportedOperationException();
+        if (! containsKey(key)) return null;
+        root = deleteNode(root, key);
+        size--;
+        System.out.println("node with key: "+key+" and value: "+root.value+" has been removed.");
+        return root.value;
+    }
+    
+    private Node deleteNode (Node root, Object key){
+        if (root == null) return root;
+
+        @SuppressWarnings("unchecked")
+		Comparable<? super K> k = (Comparable<? super K>) key; 
+        int cmp = k.compareTo(root.key);
+        /* Otherwise, recur down the tree */
+        if (cmp < 0) 
+            root.left = deleteNode(root.left, key); 
+        else if (cmp > 0) 
+            root.right = deleteNode(root.right, key); 
+  
+        // if key is same as root's key, then This is the node 
+        // to be deleted 
+        else
+        { 
+            // node with only one child or no child 
+            if (root.left == null) 
+                return root.right; 
+            else if (root.right == null) 
+                return root.left; 
+  
+            // node with two children: Get the inorder successor (smallest 
+            // in the right subtree) 
+            root = minimumElement(root.right); 
+  
+            // Delete the inorder successor 
+            root.right = deleteNode(root.right, root.key); 
+        }
+        return root; 
+    }
+
+    private Node minimumElement(Node node) {
+        if (node.left == null) {
+            return node;
+        } else {
+            return minimumElement(node.left);
+        }
+    }
+
+    // private Node deleteNode (Node root, Object key){
+    //     Node node = findNode(key);
+    //     if (node == null) {
+    //         return null;
+    //     }
+
+    //     // Node to be deleted has both child
+    //     if (node.left != null && node.right != null) {
+            
+    //         // Get smallest child from right subtree
+    //         Node minNode = minimumElement(node.right);
+    //         // Replace the Node to be deleted with minNode
+    //         // node.key = minNode.key;
+    //         // node.value = minNode.value;
+    //         // node = minNode;
+    //         // remove the minNode
+    //         Node temp = minNode;
+    //         remove(minNode.key);
+    //         node = temp;
+            
+    //     } 
+    //     // Node to be deleted has only left child
+    //     else if (node.left != null) {
+    //         node = node.left;
+    //     }
+    //     // Node to be deleted has only right child
+    //     else if (node.right != null) {
+    //         node = node.right;
+    //     }
+    //     // Node to be deleted has no child
+    //     else {
+    //         node = null;
+    //     }
+    //     return node;
+    // }
+
+    
 
 	@Override
 	public int size() {
@@ -309,6 +392,11 @@ public class MyTreeMap<K, V> implements Map<K, V> {
         System.out.println(value);
         System.out.println(map.containsValue(3));
         System.out.println(map.containsValue(2));
+        map.put("Word3", 4);
+        map.put("Word0", 3);
+        System.out.println(map.size());
+        map.remove("Word3");
+        System.out.println(map.size());
 
 		for (String key: map.keySet()) {
             System.out.println("inside");

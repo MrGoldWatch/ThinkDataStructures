@@ -167,7 +167,11 @@ public class MyTreeMapTest {
 	 */
 	@Test
 	public void testRemove() {
-		// nothing to test, since this method is not implemented
+        // nothing to test, since this method is not implemented
+        map.put("19", 6);
+        assertThat(map.size(), is(10));
+        map.remove("19");
+        assertThat(map.size(), is(9));
 	}
 
 	/**
