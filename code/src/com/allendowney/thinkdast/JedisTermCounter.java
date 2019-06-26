@@ -1,4 +1,4 @@
-package com.allendowney.thinkdast;
+// package com.allendowney.thinkdast;
 
 import java.io.IOException;
 import java.util.List;
@@ -53,12 +53,16 @@ public class JedisTermCounter extends TermCounter {
 		return result;
 	}
 
+	public String whatIsLable() {
+		return hashName();
+	}
+
 	/**
 	 * @param args
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
-		String url = "https://en.wikipedia.org/wiki/Java_(programming_language)";
+		String url = "https://en.wikipedia.org/wiki/Java";
 		
 		WikiFetcher wf = new WikiFetcher();
 		Elements paragraphs = wf.fetchWikipedia(url);
@@ -74,5 +78,7 @@ public class JedisTermCounter extends TermCounter {
 		for (Map.Entry<String, String> entry: map.entrySet()) {
 			System.out.println(entry.getKey() + ", " + entry.getValue());
 		}
+		// String hashname = hashName();
+		System.out.println("lable is: "+ counter.whatIsLable());
 	}
 }

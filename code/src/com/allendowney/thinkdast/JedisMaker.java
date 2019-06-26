@@ -1,4 +1,6 @@
-package com.allendowney.thinkdast;
+
+
+
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -27,6 +29,7 @@ public class JedisMaker {
 		String slash = File.separator;
 		String filename = "resources" + slash + "redis_url.txt";
 		URL fileURL = JedisMaker.class.getClassLoader().getResource(filename);
+		System.out.println(JedisMaker.class.getClassLoader().getResource("").getPath());
 		String filepath = URLDecoder.decode(fileURL.getFile(), "UTF-8");
 		
 		// open the file

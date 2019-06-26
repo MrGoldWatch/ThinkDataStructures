@@ -1,4 +1,4 @@
-package com.allendowney.thinkdast;
+// package com.allendowney.thinkdast;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -47,9 +47,9 @@ public class JedisIndexTest {
 		Elements paragraphs = wf.readWikipedia(url1);
 		index.indexPage(url1, paragraphs);
 
-		url2 = "https://en.wikipedia.org/wiki/Programming_language";
-		paragraphs = wf.readWikipedia(url2);
-		index.indexPage(url2, paragraphs);
+		// url2 = "https://en.wikipedia.org/wiki/Programming_language";
+		// paragraphs = wf.readWikipedia(url2);
+		// index.indexPage(url2, paragraphs);
 	}
 
 	/**

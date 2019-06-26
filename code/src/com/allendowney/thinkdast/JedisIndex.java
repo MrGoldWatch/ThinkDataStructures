@@ -1,4 +1,4 @@
-package com.allendowney.thinkdast;
+// package com.allendowney.thinkdast;
 
 import java.io.IOException;
 import java.util.Map;
@@ -77,8 +77,8 @@ public class JedisIndex {
 	 * @return Set of URLs.
 	 */
 	public Set<String> getURLs(String term) {
-        // FILL THIS IN!
-		return null;
+		Set<String> urls = jedis.smembers(urlSetKey(term));
+		return urls;
 	}
 
     /**
@@ -89,7 +89,16 @@ public class JedisIndex {
 	 */
 	public Map<String, Integer> getCounts(String term) {
         // FILL THIS IN!
-		return null;
+		// return null;
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		Set<String> urls = getURLs(term); // now we have the URLs that contain the search term
+		System.out.println(urls);
+		for (String url : urls) {
+			System.out.println("url is: "+url);
+			System.out.println(getCount(url, term));
+			map.put(url, getCount(url, term));
+		}
+		return map;
 	}
 
     /**
@@ -101,7 +110,10 @@ public class JedisIndex {
 	 */
 	public Integer getCount(String url, String term) {
         // FILL THIS IN!
-		return null;
+		// return null;
+		String count = jedis.hget(termCounterKey(url),term);
+		// Integer count = s.toInteger();
+		return Integer.parseInt(count);
 	}
 
 	/**
@@ -112,8 +124,53 @@ public class JedisIndex {
 	 */
 	public void indexPage(String url, Elements paragraphs) {
 		// TODO: FILL THIS IN!
+		// at this point we have the paragraphs to be parsed
+		// we have the url to set our key for the URLSet Hash
+		// going to utilize TermCounter class for parsing paragaraphs
+		System.out.println("Indexing: "+url+" ...");
+
+		// This will Encapsulate a map from search term to frequency (count).
+		TermCounter tc = new TermCounter(url.toString());
+		tc.processElements(paragraphs); // at this point we have the page indexed
+
+		// need to push to redis set (set up URLSet)
+		// need to push to redis hash (set up TermCounter) --> basically already done - just needs a method to push to jedis
+
+		pushTermCounterToRedis(tc);
+
+		Map<String, String> map = pullFromRedis(url.toString());
+		for (Map.Entry<String, String> entry: map.entrySet()) {
+			System.out.println(entry.getKey() + ", " + entry.getValue());
+		}
+
+
 	}
 
+	public Map<String, String> pullFromRedis(String url) {
+		//  = tc.getLabel();
+		Map<String, String> result = jedis.hgetAll(termCounterKey(url));
+		return result;
+	}
+
+	/**
+	 * Pushes the contents of the TermCounter to Redis.
+	 * 
+	 */
+	public List<Object> pushTermCounterToRedis(TermCounter tc) {
+		Transaction t = jedis.multi();
+		
+		String url = tc.getLabel();
+		String hashname = termCounterKey(url); // will return TermCounter: + url;
+		t.del(hashname);
+
+		for (String term: tc.keySet()) {
+			Integer count = tc.get(term);
+			t.hset(hashname, term, count.toString()); // add to Redis hash TermCounter
+			t.sadd(urlSetKey(term), url); // add to Redis Set URLSet
+		}
+		List<Object> res = t.exec();
+		return res;
+	}
 	/**
 	 * Prints the contents of the index.
 	 *
@@ -231,14 +288,35 @@ public class JedisIndex {
 	public static void main(String[] args) throws IOException {
 		Jedis jedis = JedisMaker.make();
 		JedisIndex index = new JedisIndex(jedis);
+		String url;
 
-		//index.deleteTermCounters();
-		//index.deleteURLSets();
-		//index.deleteAllKeys();
+		index.deleteTermCounters();
+		index.deleteURLSets();
+		index.deleteAllKeys();
 		loadIndex(index);
 
-		Map<String, Integer> map = index.getCounts("the");
-		for (Entry<String, Integer> entry: map.entrySet()) {
+
+		Set<String> urlKeys = index.termCounterKeys();
+		for (String s : urlKeys) {
+			System.out.println(s);
+		}
+
+		// Set<String> keys = urlSetKeys();
+		// System.out.println(termCounterKeys());	
+		System.out.println("");
+		// Set<String> set = index.getURLs("URLSet:normally");
+		// System.out.println(set);
+		// for (String s : set) {
+			// System.out.println(s);
+
+			// System.out.println(getCount(s,"normally"));
+			// url = s;
+		// }
+
+		System.out.println(index.getCount("https://en.wikipedia.org/wiki/Java","growth"));
+		System.out.println("calling getCounts");
+		Map<String, Integer> maps = index.getCounts("growth");
+		for (Entry<String, Integer> entry: maps.entrySet()) {
 			System.out.println(entry);
 		}
 	}
@@ -252,12 +330,15 @@ public class JedisIndex {
 	private static void loadIndex(JedisIndex index) throws IOException {
 		WikiFetcher wf = new WikiFetcher();
 
-		String url = "https://en.wikipedia.org/wiki/Java_(programming_language)";
-		Elements paragraphs = wf.readWikipedia(url);
+		String url = "https://en.wikipedia.org/wiki/Java";
+		// Elements paragraphs = wf.readWikipedia(url);
+		Elements paragraphs = wf.fetchWikipedia(url);
 		index.indexPage(url, paragraphs);
 
-		url = "https://en.wikipedia.org/wiki/Programming_language";
-		paragraphs = wf.readWikipedia(url);
-		index.indexPage(url, paragraphs);
+		
+
+		// url = "https://en.wikipedia.org/wiki/Programming_language";
+		// paragraphs = wf.readWikipedia(url);
+		// index.indexPage(url, paragraphs);
 	}
 }
